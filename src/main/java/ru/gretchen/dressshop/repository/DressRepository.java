@@ -1,12 +1,9 @@
 package ru.gretchen.dressshop.repository;
 
 import ru.gretchen.dressshop.model.DressEntity;
-import ru.gretchen.dressshop.model.Enumeration.Colour;
+import ru.gretchen.dressshop.model.Enumeration.Color;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,27 +13,27 @@ public class DressRepository extends BaseRepository {
     private final static String GET_BY_ID_SQL = "SELECT * FROM dress WHERE id = ?;";
     private final static String SAVE_SQL = "INSERT INTO dress (colour, price, in_stock) VALUES (?, ?, ?);";
     private final static String GET_ALL_SQL = "SELECT * FROM dress;";
-    private final static String UPDATE_BY_ID_SQL = "UPDATE dress SET colour = ?, price = ?, in_stock = ? WHERE id = ?;";
+    private final static String UPDATE_COLOR_STOCK = "UPDATE dress SET colour = ?, in_stock = ? WHERE id = ?;";
+    private final static String UPDATE_PRICE = "UPDATE dress SET price = ? WHERE id = ?;";
     private final static String DELETE_BY_ID_SQL = "DELETE FROM dress WHERE id = ?;";
 
     public Optional<DressEntity> getById(Long id) throws SQLException {
-        Colour colour = null;
+        Color color = null;
         Long price = null;
         Long inStock = null;
         PreparedStatement preparedStatement = getConnection().prepareStatement(GET_BY_ID_SQL);
         preparedStatement.setLong(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
-            colour = (Colour) resultSet.getObject("colour");
+            color = Color.valueOf(resultSet.getString("colour"));
             price = resultSet.getLong("price");
             inStock = resultSet.getLong("in_stock");
-        } return Optional.of(new DressEntity(id, colour, price, inStock));
-
+        } return Optional.of(new DressEntity(id, color, price, inStock));
     }
 
     public DressEntity save(DressEntity dress) throws SQLException {
         PreparedStatement preparedStatement = getConnection().prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setObject(1, dress.getColour());
+        preparedStatement.setString(1, dress.getColor().toString());
         preparedStatement.setLong(2, dress.getPrice());
         preparedStatement.setLong(3, dress.getInStock());
         preparedStatement.execute();
@@ -48,12 +45,21 @@ public class DressRepository extends BaseRepository {
     }
 
     public DressEntity update(Long id, DressEntity dress) throws SQLException {
-        PreparedStatement preparedStatement = getConnection().prepareStatement(UPDATE_BY_ID_SQL);
-        preparedStatement.setObject(1, dress.getColour());
-        preparedStatement.setLong(2, dress.getPrice());
-        preparedStatement.setLong(3, dress.getInStock());
-        preparedStatement.setLong(4, id);
+        Connection connection = getConnection();
+        connection.setAutoCommit(false);
+
+        PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_COLOR_STOCK);
+        preparedStatement.setString(1, dress.getColor().toString());
+        preparedStatement.setLong(2, dress.getInStock());
+        preparedStatement.setLong(3, id);
         preparedStatement.executeUpdate();
+
+        PreparedStatement preparedStatement2 = connection.prepareStatement(UPDATE_PRICE);
+        preparedStatement2.setLong(1, dress.getPrice());
+        preparedStatement2.setLong(2, id);
+        preparedStatement2.executeUpdate();
+        connection.commit();
+        connection.setAutoCommit(true);
         return dress;
     }
 
@@ -69,10 +75,10 @@ public class DressRepository extends BaseRepository {
         List<DressEntity> dresses = new ArrayList<>();
         while (resultSet.next()) {
             Long id = resultSet.getLong("id");
-            Colour colour = (Colour) resultSet.getObject("colour");
+            Color color = Color.valueOf(resultSet.getString("colour"));
             Long price = resultSet.getLong("price");
             Long inStock = resultSet.getLong("in_stock");
-            dresses.add(new DressEntity(id, colour, price, inStock));
+            dresses.add(new DressEntity(id, color, price, inStock));
         }
         return dresses;
     }

@@ -1,6 +1,6 @@
 package ru.gretchen.dressshop.model.Enumeration;
 
-public enum Colour {
+public enum Color {
     WHITE("WHITE"),
     GREY("GREY"),
     BLACK("BLACK"),
@@ -15,7 +15,7 @@ public enum Colour {
 
     private final String color;
 
-    Colour(final String color) {
+    Color(final String color) {
         this.color = color;
     }
 

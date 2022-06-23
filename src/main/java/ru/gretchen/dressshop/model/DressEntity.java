@@ -1,7 +1,7 @@
 package ru.gretchen.dressshop.model;
 
 import lombok.*;
-import ru.gretchen.dressshop.model.Enumeration.Colour;
+import ru.gretchen.dressshop.model.Enumeration.Color;
 
 @Getter
 @Setter
@@ -11,7 +11,7 @@ import ru.gretchen.dressshop.model.Enumeration.Colour;
 @NoArgsConstructor
 public class DressEntity {
     private Long id;
-    private Colour colour;
+    private Color color;
     private Long price;
     private Long inStock;
 }
