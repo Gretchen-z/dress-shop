@@ -9,7 +9,7 @@
 
 <h1>Dress Management</h1>
 <h2>
-    <a href="${pageContext.request.contextPath}/add">Add New Dress</a>
+    <a href="${pageContext.request.contextPath}/dresses/add">Add New Dress</a>
 
 </h2>
 
@@ -31,9 +31,9 @@
                 <td><c:out value="${dress.price}"/></td>
                 <td><c:out value="${dress.inStock}"/></td>
                 <td>
-                    <a href="${pageContext.request.contextPath}/edit?id=<c:out value='${dress.id}' />">Edit</a>
+                    <a href="${pageContext.request.contextPath}/dresses/edit?id=<c:out value='${dress.id}' />">Edit</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="${pageContext.request.contextPath}/delete?id=<c:out value='${dress.id}' />">Delete</a>
+                    <a href="${pageContext.request.contextPath}/dresses/delete?id=<c:out value='${dress.id}' />">Delete</a>
                 </td>
             </tr>
         </c:forEach>

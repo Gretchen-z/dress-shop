@@ -8,11 +8,11 @@
 <body>
 
     <c:if test="${dress != null}">
-        <form method="post" action="${pageContext.request.contextPath}/edit">
+        <form method="post" action="${pageContext.request.contextPath}/dresses/edit">
     </c:if>
 
     <c:if test="${dress == null}">
-        <form method="post" action="${pageContext.request.contextPath}/add">
+        <form method="post" action="${pageContext.request.contextPath}/dresses/add">
     </c:if>
 
         <input type="hidden" id="id" name="id" value="<c:out value='${dress.id}' />">
