@@ -7,12 +7,19 @@ import ru.gretchen.dressshop.model.DressEntity;
 import ru.gretchen.dressshop.model.ShopEntity;
 
 import java.util.List;
+import java.util.Set;
 
 public class ShopRepository {
 
     public ShopEntity getById(Long id) {
         return HibernateSessionFactoryUtil.getSessionFactory().openSession()
                 .get(ShopEntity.class, id);
+    }
+    
+    public Set<DressEntity> getDresses(Long id) {
+        ShopEntity shop = HibernateSessionFactoryUtil.getSessionFactory().openSession()
+                .get(ShopEntity.class, id);
+        return shop.getDresses();
     }
 
     public ShopEntity save(ShopEntity shop) {

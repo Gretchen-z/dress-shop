@@ -3,10 +3,12 @@ package ru.gretchen.dressshop.controller;
 import ru.gretchen.dressshop.exception.GetShopException;
 import ru.gretchen.dressshop.exception.RepositoryInitializeException;
 import ru.gretchen.dressshop.exception.ShopNotFoundException;
+import ru.gretchen.dressshop.model.DressEntity;
 import ru.gretchen.dressshop.model.ShopEntity;
 import ru.gretchen.dressshop.repository.ShopRepository;
 
 import java.util.List;
+import java.util.Set;
 
 public class ShopController {
     private final ShopRepository shopRepository;
@@ -21,6 +23,10 @@ public class ShopController {
         } catch (ShopNotFoundException e) {
             throw new GetShopException(e.getMessage());
         }
+    }
+
+    public Set<DressEntity> getDresses(Long id) {
+        return shopRepository.getDresses(id);
     }
 
     public List<ShopEntity> getAllShops() {

@@ -1,6 +1,7 @@
 package ru.gretchen.dressshop.model;
 
 import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.gretchen.dressshop.model.Enumeration.Color;
 
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Entity
 @Table(name = "dress")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class DressEntity extends BaseEntity {
     @Column(name = "color")
     private Color color;
