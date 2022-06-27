@@ -3,6 +3,7 @@ package ru.gretchen.dressshop.servlet;
 import lombok.SneakyThrows;
 import ru.gretchen.dressshop.controller.ShopController;
 import ru.gretchen.dressshop.controller.ShopControllerFactory;
+import ru.gretchen.dressshop.model.DressEntity;
 import ru.gretchen.dressshop.model.HttpRequestResponseWrapper;
 import ru.gretchen.dressshop.model.ShopEntity;
 
@@ -32,6 +33,7 @@ public class ShopServlet extends HttpServlet {
         getMap.put("/edit", ShopServlet::getShopForm);
         getMap.put("/add", ShopServlet::getShopForm);
         getMap.put("/delete", ShopServlet::deleteShop);
+        getMap.put("/lazyinit", ShopServlet::lazyInitExample);
         postMap.put("/edit", ShopServlet::updateShop);
         postMap.put("/add", ShopServlet::addShop);
 
@@ -47,6 +49,11 @@ public class ShopServlet extends HttpServlet {
         handlingMap.get(method)
                 .get(pathInfo)
                 .accept(this, new HttpRequestResponseWrapper(req, resp));
+    }
+
+    @SneakyThrows
+    private void lazyInitExample(HttpRequestResponseWrapper wrapper) {
+        Set<DressEntity> dresses = controller.getDresses(1L);
     }
 
     @SneakyThrows

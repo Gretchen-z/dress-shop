@@ -25,6 +25,10 @@ public class DressController {
         return dressRepository.getAll();
     }
 
+    public long getCountOfExpensiveDresses() {
+        return dressRepository.getCountOfDressWithPriceMoreThan2000();
+    }
+
     public DressEntity createDress(DressEntity dress) {
         return dressRepository.save(dress);
     }

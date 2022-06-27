@@ -15,10 +15,16 @@ public class ShopRepository {
         return HibernateSessionFactoryUtil.getSessionFactory().openSession()
                 .get(ShopEntity.class, id);
     }
-    
+
     public Set<DressEntity> getDresses(Long id) {
-        ShopEntity shop = HibernateSessionFactoryUtil.getSessionFactory().openSession()
-                .get(ShopEntity.class, id);
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        ShopEntity shop = session.get(ShopEntity.class, id);
+
+        //LazyInitializationException example
+        session.close();
+        Set<DressEntity> dresses = shop.getDresses();
+        DressEntity next = dresses.iterator().next();
+
         return shop.getDresses();
     }
 
@@ -75,9 +81,9 @@ public class ShopRepository {
         session.close();
     }
 
+    //N+1 problem resolve
     public List<ShopEntity> getAll() {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
         List<ShopEntity> shops = session
                 .createQuery("FROM ShopEntity s JOIN FETCH s.dresses", ShopEntity.class)
                 .getResultList();

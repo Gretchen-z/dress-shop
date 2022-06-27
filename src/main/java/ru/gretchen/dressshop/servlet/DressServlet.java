@@ -36,6 +36,7 @@ public class DressServlet extends HttpServlet {
         getMap.put("/edit", DressServlet::getDressForm);
         getMap.put("/add", DressServlet::getDressForm);
         getMap.put("/delete", DressServlet::deleteDress);
+        getMap.put("/bigquery", DressServlet::bigQueryProceed);
         postMap.put("/edit", DressServlet::updateDress);
         postMap.put("/add", DressServlet::addDress);
 
@@ -51,6 +52,22 @@ public class DressServlet extends HttpServlet {
         handlingMap.get(method)
                 .get(pathInfo)
                 .accept(this, new HttpRequestResponseWrapper(req, resp));
+    }
+
+    @SneakyThrows
+    private void bigQueryProceed(HttpRequestResponseWrapper wrapper) {
+        long start = System.currentTimeMillis();
+        long count = controller.getCountOfExpensiveDresses();
+        long end = System.currentTimeMillis() - start;
+
+        HttpServletRequest req = wrapper.getRequest();
+        req.setAttribute("count", count);
+        req.setAttribute("time", end);
+
+        String path = "/view/query-time-counter.jsp";
+
+        RequestDispatcher requestDispatcher = this.getServletContext().getRequestDispatcher(path);
+        requestDispatcher.forward(wrapper.getRequest(), wrapper.getResponse());
     }
 
     @SneakyThrows
